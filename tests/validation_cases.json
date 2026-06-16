@@ -44,6 +44,66 @@
       "tol": 0.001
     },
     {
+      "id": "reliamag-clean",
+      "description": "ReliaMag worked example (clean numbers): 420 min planned, 60 min of stops (run 360), ideal cycle 1.0 min/unit, 320 units of which 16 rejected. Published A 85.7%, P 88.9%, Q 95.0%, OEE 72.4%.",
+      "source": "ReliaMag, 'How to Calculate OEE: Formula, Examples, and Honest Limitations'.",
+      "method": "time_and_counts",
+      "inputs": {
+        "planned_production_time": 420,
+        "downtime": 60,
+        "ideal_cycle_time": 1.0,
+        "total_count": 320,
+        "reject_count": 16
+      },
+      "expected": {
+        "availability": 0.857,
+        "performance": 0.889,
+        "quality": 0.95,
+        "oee": 0.724
+      },
+      "tol": 0.001
+    },
+    {
+      "id": "reliamag-realistic",
+      "description": "ReliaMag worked example (realistic data over a longer horizon): 8880 min planned, 1380 min of stops (breakdown 840, changeover 360, material starvation 180; run 7500), ideal cycle 0.5 min/case, 13200 cases of which 660 rejected. Published A 84.5%, P 88.0%, Q 95.0%, OEE 70.6%.",
+      "source": "ReliaMag, 'How to Calculate OEE: Formula, Examples, and Honest Limitations'.",
+      "method": "time_and_counts",
+      "inputs": {
+        "planned_production_time": 8880,
+        "downtime": 1380,
+        "ideal_cycle_time": 0.5,
+        "total_count": 13200,
+        "reject_count": 660
+      },
+      "expected": {
+        "availability": 0.845,
+        "performance": 0.88,
+        "quality": 0.95,
+        "oee": 0.706
+      },
+      "tol": 0.001
+    },
+    {
+      "id": "firgelli-packaging",
+      "description": "FIRGELLI worked packaging-line example (times converted to minutes): 960 min (16 h) planned, 120 min (2 h) downtime (run 840 min), ideal cycle 0.5 min/package, 1440 packages of which 144 rejected. Published A 87.5%, P 85.7%, Q 90.0%, OEE 67.5%.",
+      "source": "FIRGELLI Automations, OEE (Overall Equipment Effectiveness) Calculator.",
+      "method": "time_and_counts",
+      "inputs": {
+        "planned_production_time": 960,
+        "downtime": 120,
+        "ideal_cycle_time": 0.5,
+        "total_count": 1440,
+        "reject_count": 144
+      },
+      "expected": {
+        "availability": 0.875,
+        "performance": 0.857,
+        "quality": 0.90,
+        "oee": 0.675
+      },
+      "tol": 0.001
+    },
+    {
       "id": "hand-round-numbers",
       "description": "Hand-derived: 480 min planned, 80 min down (run 400), ideal cycle 0.5 min/piece, 700 pieces all good. A = 400/480, P = (0.5*700)/400, Q = 1, OEE = (700*0.5)/480.",
       "source": "Hand-derived from the OEE definition.",

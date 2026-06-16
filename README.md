@@ -183,8 +183,11 @@ each cited in its case:
 
 | Example | OEE | Source |
 |---------|-----|--------|
-| Packaging line | 74.79% | Vorne, *The Fast Guide to OEE* ([oee.com](https://www.oee.com/calculating-oee/)) |
+| 8-hour shift (widgets) | 74.79% | Vorne, *The Fast Guide to OEE* ([oee.com](https://www.oee.com/calculating-oee/)) |
 | CNC machining shift | 68.52% | [TeepTrak, *How to Calculate OEE*](https://teeptrak.com/en/how-to-calculate-oee-formula-worked-example/) |
+| Shift, clean numbers | 72.4% | [ReliaMag, *How to Calculate OEE*](https://reliamag.com/guides/how-to-calculate-oee/) |
+| Longer-horizon run | 70.6% | [ReliaMag, *How to Calculate OEE*](https://reliamag.com/guides/how-to-calculate-oee/) |
+| Packaging line | 67.5% | [FIRGELLI Automations, OEE Calculator](https://www.firgelliauto.com/blogs/engineering-calculators/oee-overall-equipment-effectiveness-calculator) |
 | World-class benchmark | 85.4% | Nakajima (1988), *Introduction to TPM* |
 
 ## License

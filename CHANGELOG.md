@@ -8,9 +8,10 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
-- A References section and an extra published worked example in the validation
-  suite (TeepTrak's CNC machining shift, OEE 68.52%), alongside the Vorne
-  example and the Nakajima world-class benchmark.
+- A References section and more published worked examples in the validation
+  suite: TeepTrak's CNC machining shift (68.52%), two ReliaMag examples (72.4%
+  and 70.6%) and a FIRGELLI packaging line (67.5%), alongside the Vorne example
+  and the Nakajima world-class benchmark.
 
 ## [0.1.2] - 2026-06-16
 
