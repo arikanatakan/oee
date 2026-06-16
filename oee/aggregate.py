@@ -56,6 +56,14 @@ def aggregate(parts, *, target_oee: float = 0.85,
     else:
         six_losses = None
 
+    if all(p.downtime_reasons is not None for p in parts):
+        downtime_reasons: dict | None = {}
+        for part in parts:
+            for reason, value in part.downtime_reasons.items():
+                downtime_reasons[reason] = downtime_reasons.get(reason, 0.0) + value
+    else:
+        downtime_reasons = None
+
     alerts: list[Alert] = []
     if oee_value < target_oee:
         alerts.append(Alert(
@@ -77,6 +85,7 @@ def aggregate(parts, *, target_oee: float = 0.85,
         fully_productive_time=s_fp, all_time=s_all, schedule_loss=schedule_loss,
         availability_loss=s_planned - s_run, performance_loss=s_run - s_net,
         quality_loss=s_net - s_fp, six_losses=six_losses,
+        downtime_reasons=downtime_reasons,
         total_count=s_total, good_count=s_good,
         reject_count=s_total - s_good, target_oee=target_oee,
         alerts=tuple(alerts), meta=meta,

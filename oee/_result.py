@@ -61,6 +61,7 @@ class OEEResult:
     performance_loss: float | None
     quality_loss: float | None
     six_losses: dict | None
+    downtime_reasons: dict | None
     total_count: float | None
     good_count: float | None
     reject_count: float | None
@@ -136,6 +137,7 @@ class OEEResult:
                 "quality_loss": self.quality_loss,
             },
             "six_losses": self.six_losses,
+            "downtime_reasons": self.downtime_reasons,
             "counts": {
                 "total_count": self.total_count,
                 "good_count": self.good_count,

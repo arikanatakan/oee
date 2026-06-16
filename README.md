@@ -95,6 +95,21 @@ for e in oee.pareto(r.six_losses):
 # reduced_yield                     20    11%  cum  100%
 ```
 
+Or compute it from an event log of production runs and downtime events:
+
+```python
+r = oee.from_log(
+    planned_production_time=420,
+    runs=[{"count": 19271, "good": 18848, "ideal_rate": 60}],
+    downtime_events=[
+        {"reason": "changeover", "duration": 30, "planned": True},
+        {"reason": "jam",        "duration": 17},
+    ],
+)
+r.oee                  # 0.748
+r.downtime_reasons     # {'changeover': 30, 'jam': 17} - ready for pareto()
+```
+
 When you already have the three factors:
 
 ```python
@@ -129,9 +144,8 @@ correct roll-up. The `OEEResult` contract is append-only from here.
 
 | Version | Scope |
 |---------|-------|
-| 0.2 | computing OEE from an event log (production runs, downtime events with reasons, reject records) |
-| 0.3 | plotting (the OEE waterfall, six-big-losses and trend charts) as an optional extra |
-| 0.4 | an MCP server so an agent can compute and explain OEE |
+| 0.2 | plotting (the OEE waterfall, six-big-losses Pareto and trend charts) as an optional extra |
+| 0.3 | an MCP server so an agent can compute and explain OEE |
 
 Out of scope: data collection / machine connectivity (that is the job of an
 MES or an IoT dashboard); `oee` is the calculation layer they can build on.

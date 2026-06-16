@@ -15,6 +15,8 @@ TEEP and utilization when ``all_time`` is given.
 from __future__ import annotations
 
 import math
+from collections.abc import Mapping
+from dataclasses import replace
 
 from ._result import Alert, OEEResult, data_hash, utcnow
 from ._version import __version__
@@ -160,7 +162,7 @@ def oee(planned_production_time, *, run_time=None, downtime=None,
         fully_productive_time=fully_productive, all_time=all_time,
         schedule_loss=schedule_loss, availability_loss=availability_loss,
         performance_loss=performance_loss, quality_loss=quality_loss,
-        six_losses=six_losses,
+        six_losses=six_losses, downtime_reasons=None,
         total_count=total, good_count=good, reject_count=reject,
         target_oee=target_oee, alerts=tuple(alerts), meta=meta,
     )
@@ -195,7 +197,87 @@ def oee_from_factors(availability, performance, quality, *,
         planned_production_time=None, run_time=None, net_run_time=None,
         fully_productive_time=None, all_time=None, schedule_loss=None,
         availability_loss=None, performance_loss=None, quality_loss=None,
-        six_losses=None,
+        six_losses=None, downtime_reasons=None,
         total_count=None, good_count=None, reject_count=None,
         target_oee=target_oee, alerts=tuple(alerts), meta=meta,
     )
+
+
+def from_log(planned_production_time, *, runs, downtime_events=None,
+             all_time=None, startup_rejects=None, target_oee: float = 0.85,
+             name: str | None = None) -> OEEResult:
+    """Compute OEE from an event log of production runs and downtime events.
+
+    Each entry in ``runs`` is a mapping with ``count``, one of ``good`` or
+    ``reject``, and one of ``ideal_cycle_time`` or ``ideal_rate`` (runs may use
+    different rates). Each entry in ``downtime_events`` is a mapping with a
+    ``duration``, a ``reason``, and an optional ``planned`` flag (planned stops
+    become setup and adjustments, the rest breakdowns). The result carries
+    ``downtime_reasons`` for a Pareto, plus the usual waterfall and six losses.
+    """
+    if isinstance(runs, Mapping):
+        runs = [runs]
+    runs = list(runs)
+    if not runs:
+        raise ValueError("from_log needs at least one production run")
+
+    total = good = ideal_net_run = 0.0
+    for i, run in enumerate(runs):
+        count = _finite(run["count"], f"runs[{i}].count")
+        if count < 0:
+            raise ValueError(f"runs[{i}].count must be non-negative")
+        if ("good" in run) == ("reject" in run):
+            raise ValueError(f"runs[{i}] needs exactly one of good or reject")
+        g = (_finite(run["good"], f"runs[{i}].good") if "good" in run
+             else count - _finite(run["reject"], f"runs[{i}].reject"))
+        if not 0 <= g <= count:
+            raise ValueError(f"runs[{i}].good must be between 0 and count")
+        if ("ideal_cycle_time" in run) == ("ideal_rate" in run):
+            raise ValueError(
+                f"runs[{i}] needs exactly one of ideal_cycle_time or ideal_rate")
+        if "ideal_cycle_time" in run:
+            cycle = _finite(run["ideal_cycle_time"], f"runs[{i}].ideal_cycle_time")
+        else:
+            rate = _finite(run["ideal_rate"], f"runs[{i}].ideal_rate")
+            if rate <= 0:
+                raise ValueError(f"runs[{i}].ideal_rate must be positive")
+            cycle = 1.0 / rate
+        if cycle <= 0:
+            raise ValueError(f"runs[{i}].ideal_cycle_time must be positive")
+        total += count
+        good += g
+        ideal_net_run += count * cycle
+    if total <= 0:
+        raise ValueError("the production runs have no pieces")
+    effective_cycle = ideal_net_run / total
+
+    downtime_reasons: dict[str, float] = {}
+    total_downtime = 0.0
+    setup = 0.0
+    for j, event in enumerate(downtime_events or []):
+        duration = _finite(event["duration"], f"downtime_events[{j}].duration")
+        if duration < 0:
+            raise ValueError(f"downtime_events[{j}].duration must be non-negative")
+        reason = str(event.get("reason", "unspecified"))
+        total_downtime += duration
+        downtime_reasons[reason] = downtime_reasons.get(reason, 0.0) + duration
+        if bool(event.get("planned", False)):
+            setup += duration
+
+    result = oee(
+        planned_production_time, downtime=total_downtime,
+        ideal_cycle_time=effective_cycle, total_count=total, good_count=good,
+        all_time=all_time, setup_time=setup if downtime_events else None,
+        startup_rejects=startup_rejects, target_oee=target_oee, name=name,
+    )
+    meta = {
+        **result.meta,
+        "method": "event_log",
+        "input_hash": data_hash({
+            "planned": float(planned_production_time), "total": total,
+            "good": good, "net_run": ideal_net_run,
+            "downtime_reasons": downtime_reasons,
+        }),
+    }
+    return replace(result, downtime_reasons=downtime_reasons, meta=meta)
+

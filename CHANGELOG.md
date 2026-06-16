@@ -17,6 +17,10 @@ All notable changes to this project are documented here. The format follows
 - `pareto()` - rank any named breakdown (downtime reasons, the six losses,
   reject reasons) largest first, with each one's share and the running
   cumulative share, so the vital few losses to target stand out.
+- `from_log()` - compute OEE from an event log of production runs and downtime
+  events (each with a reason and an optional planned flag). It aggregates the
+  runs (which may use different rates), splits the availability loss using the
+  planned events, and attaches `downtime_reasons` ready for `pareto()`.
 
 ## [0.1.0] - 2026-06-16
 
