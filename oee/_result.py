@@ -51,6 +51,9 @@ class OEEResult:
     performance_raw: float
     utilization: float | None
     teep: float | None
+    ooe: float | None
+    ooe_availability: float | None
+    operating_time: float | None
     planned_production_time: float | None
     run_time: float | None
     net_run_time: float | None
@@ -99,6 +102,8 @@ class OEEResult:
             f"  Quality        {_pct(self.quality):>5}%",
             f"  OEE            {_pct(self.oee):>5}%",
         ]
+        if self.ooe is not None:
+            lines.append(f"  OOE            {_pct(self.ooe):>5}%")
         if self.teep is not None:
             lines.append(f"  TEEP           {_pct(self.teep):>5}%")
         if self.six_losses and self.planned_production_time:
@@ -119,12 +124,15 @@ class OEEResult:
                 "performance": self.performance,
                 "quality": self.quality,
                 "oee": self.oee,
+                "ooe": self.ooe,
+                "ooe_availability": self.ooe_availability,
                 "performance_raw": self.performance_raw,
                 "utilization": self.utilization,
                 "teep": self.teep,
             },
             "times": {
                 "all_time": self.all_time,
+                "operating_time": self.operating_time,
                 "planned_production_time": self.planned_production_time,
                 "run_time": self.run_time,
                 "net_run_time": self.net_run_time,

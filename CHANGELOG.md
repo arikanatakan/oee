@@ -8,6 +8,18 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- The effectiveness family: OOE (Overall Operations Effectiveness) alongside OEE
+  and TEEP. Passing `planned_downtime` to `oee()` reports OOE, measured over
+  operating time (planned production time + planned downtime), so OOE <= OEE;
+  `aggregate()` rolls it up too.
+- `reliability()` - MTBF, MTTR and inherent availability, the maintenance
+  drivers behind the availability factor.
+- `first_pass_yield()` and `rolled_throughput_yield()` - the multi-step quality
+  view that extends the single-step quality factor.
+- `takt_time()` and `capacity()` - the pace needed to meet demand and whether a
+  cycle time can keep up.
+- `loss_value()` - turns the availability, performance and quality losses into
+  lost units and money.
 - A References section and more published worked examples in the validation
   suite: TeepTrak's CNC machining shift (68.52%), two ReliaMag examples (72.4%
   and 70.6%) and a FIRGELLI packaging line (67.5%), alongside the Vorne example

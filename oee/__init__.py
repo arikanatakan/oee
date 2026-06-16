@@ -24,12 +24,25 @@ examples.
 from ._result import Alert, OEEResult
 from ._version import __version__
 from .aggregate import aggregate
+from .capacity import CapacityResult, capacity, takt_time
 from .core import from_log, oee, oee_from_factors
 from .pareto import ParetoEntry, pareto
 from .plot import losses_pareto, trend, waterfall
+from .reliability import ReliabilityResult, reliability
+from .valuation import ValuationResult, loss_value
+from .yields import YieldResult, first_pass_yield, rolled_throughput_yield
 
 __all__ = [
+    # OEE and the effectiveness family (OEE, OOE, TEEP)
     "oee", "oee_from_factors", "from_log", "aggregate", "pareto",
     "waterfall", "losses_pareto", "trend",
-    "OEEResult", "Alert", "ParetoEntry", "__version__",
+    # reliability (the availability driver)
+    "reliability",
+    # yield (the quality driver)
+    "first_pass_yield", "rolled_throughput_yield",
+    # capacity and loss valuation
+    "takt_time", "capacity", "loss_value",
+    # result types
+    "OEEResult", "Alert", "ParetoEntry", "ReliabilityResult", "YieldResult",
+    "CapacityResult", "ValuationResult", "__version__",
 ]

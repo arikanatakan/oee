@@ -49,6 +49,13 @@ def aggregate(parts, *, target_oee: float = 0.85,
     else:
         s_all = utilization = teep = schedule_loss = None
 
+    if all(p.operating_time is not None for p in parts):
+        s_operating = sum(p.operating_time for p in parts)
+        ooe_availability = s_run / s_operating if s_operating else 0.0
+        ooe = s_fp / s_operating if s_operating else 0.0
+    else:
+        s_operating = ooe_availability = ooe = None
+
     loss_keys = ("breakdowns", "setup_and_adjustments",
                  "minor_stops_and_reduced_speed", "process_defects", "reduced_yield")
     if all(p.six_losses is not None for p in parts):
@@ -80,7 +87,8 @@ def aggregate(parts, *, target_oee: float = 0.85,
     return OEEResult(
         name=name, availability=availability, performance=performance,
         quality=quality, oee=oee_value, performance_raw=performance,
-        utilization=utilization, teep=teep,
+        utilization=utilization, teep=teep, ooe=ooe,
+        ooe_availability=ooe_availability, operating_time=s_operating,
         planned_production_time=s_planned, run_time=s_run, net_run_time=s_net,
         fully_productive_time=s_fp, all_time=s_all, schedule_loss=schedule_loss,
         availability_loss=s_planned - s_run, performance_loss=s_run - s_net,

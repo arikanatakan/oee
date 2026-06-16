@@ -149,6 +149,49 @@ All times must be in the same unit; `ideal_cycle_time` is that unit per piece
 (or pass `ideal_rate` in pieces per that unit). Performance above 100% is capped
 and flagged, since it means the ideal rate or counts are off.
 
+## Beyond OEE
+
+The same data supports the metrics that surround OEE, each in the same `Result`
+style with provenance.
+
+The effectiveness family. Pass the planned downtime and `oee()` adds OOE
+(measured over operating time = planned production time + planned downtime), so
+you get all three at once (TEEP <= OOE <= OEE):
+
+```python
+r = oee.oee(planned_production_time=420, downtime=47, ideal_rate=60,
+            total_count=19271, reject_count=423, all_time=480, planned_downtime=33)
+r.oee, r.ooe, r.teep        # OEE >= OOE >= TEEP
+```
+
+Reliability, the maintenance driver of the availability factor:
+
+```python
+oee.reliability(operating_time=1000, failures=5, total_repair_time=50)
+# MTBF 200, MTTR 10, inherent availability 95.2%
+```
+
+Yield, the multi-step quality view that extends the single-step quality factor:
+
+```python
+oee.rolled_throughput_yield([0.99, 0.98, 0.97]).rty    # 0.941
+```
+
+Capacity, and the money behind the losses:
+
+```python
+oee.takt_time(available_time=480, demand=240)          # 2.0 per unit
+oee.loss_value(r, value_per_unit=12.0)                 # losses as units and money
+```
+
+| Metric | What it adds |
+|--------|--------------|
+| `oee()` with `planned_downtime` | OOE alongside OEE and TEEP |
+| `reliability()` | MTBF, MTTR, inherent availability |
+| `first_pass_yield()`, `rolled_throughput_yield()` | multi-step quality |
+| `takt_time()`, `capacity()` | the pace needed to meet demand |
+| `loss_value()` | losses in lost units and money |
+
 ## Status
 
 Version 0.1.0. Single-machine OEE, the time waterfall, TEEP/utilization, and

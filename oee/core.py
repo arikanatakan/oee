@@ -39,7 +39,7 @@ def _exactly_one(a, b, name_a: str, name_b: str):
 
 def oee(planned_production_time, *, run_time=None, downtime=None,
         ideal_cycle_time=None, ideal_rate=None, total_count,
-        good_count=None, reject_count=None, all_time=None,
+        good_count=None, reject_count=None, all_time=None, planned_downtime=None,
         setup_time=None, startup_rejects=None,
         target_oee: float = 0.85, name: str | None = None) -> OEEResult:
     """Compute OEE and the time/loss waterfall from times and piece counts.
@@ -113,6 +113,15 @@ def oee(planned_production_time, *, run_time=None, downtime=None,
         utilization = planned / at if at > 0 else 0.0
         teep = fully_productive / at if at > 0 else 0.0
 
+    operating_time = ooe_availability = ooe_value = None
+    if planned_downtime is not None:
+        pd = _finite(planned_downtime, "planned_downtime")
+        if pd < 0:
+            raise ValueError("planned_downtime must be non-negative")
+        operating_time = planned + pd
+        ooe_availability = run / operating_time if operating_time > 0 else 0.0
+        ooe_value = fully_productive / operating_time if operating_time > 0 else 0.0
+
     if not 0 < target_oee <= 1:
         raise ValueError("target_oee must be in (0, 1]")
     if oee_value < target_oee:
@@ -157,7 +166,8 @@ def oee(planned_production_time, *, run_time=None, downtime=None,
     return OEEResult(
         name=name, availability=availability, performance=performance,
         quality=quality, oee=oee_value, performance_raw=performance_raw,
-        utilization=utilization, teep=teep,
+        utilization=utilization, teep=teep, ooe=ooe_value,
+        ooe_availability=ooe_availability, operating_time=operating_time,
         planned_production_time=planned, run_time=run, net_run_time=net_run,
         fully_productive_time=fully_productive, all_time=all_time,
         schedule_loss=schedule_loss, availability_loss=availability_loss,
@@ -193,7 +203,8 @@ def oee_from_factors(availability, performance, quality, *,
     }
     return OEEResult(
         name=name, availability=a, performance=p, quality=q, oee=oee_value,
-        performance_raw=p, utilization=None, teep=None,
+        performance_raw=p, utilization=None, teep=None, ooe=None,
+        ooe_availability=None, operating_time=None,
         planned_production_time=None, run_time=None, net_run_time=None,
         fully_productive_time=None, all_time=None, schedule_loss=None,
         availability_loss=None, performance_loss=None, quality_loss=None,
