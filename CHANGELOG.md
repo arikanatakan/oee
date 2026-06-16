@@ -4,6 +4,17 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project uses
 [semantic versioning](https://semver.org/).
 
+## [0.1.1] - 2026-06-16
+
+### Added
+
+- The six big losses. `oee()` now returns `six_losses`, splitting the
+  availability, performance and quality losses into breakdowns, setup and
+  adjustments, minor stops and reduced speed (reported combined), process
+  defects and reduced yield. Optional `setup_time` and `startup_rejects`
+  arguments drive the availability and quality splits, `aggregate()` sums the
+  six losses across machines, and `summary()` names the biggest loss.
+
 ## [0.1.0] - 2026-06-16
 
 First release.

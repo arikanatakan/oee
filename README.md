@@ -68,6 +68,21 @@ line = oee.aggregate([m1, m2])
 line.oee         # 0.5375, not the 0.625 average of the two
 ```
 
+Break the losses down into the six big losses:
+
+```python
+r = oee.oee(
+    planned_production_time=480, downtime=80, ideal_cycle_time=0.5,
+    total_count=700, reject_count=100,
+    setup_time=30,        # of the 80 min down, 30 was setup
+    startup_rejects=40,   # of the 100 rejects, 40 were at startup
+)
+r.six_losses
+# {'breakdowns': 50.0, 'setup_and_adjustments': 30.0,
+#  'minor_stops_and_reduced_speed': 50.0,
+#  'process_defects': 30.0, 'reduced_yield': 20.0}
+```
+
 When you already have the three factors:
 
 ```python
@@ -85,6 +100,7 @@ provenance (version, input hash, timestamp).
 | Factors | availability, performance, quality, OEE |
 | Extended | TEEP, utilization (when total calendar time is given) |
 | Waterfall | planned -> run -> net run -> fully productive time, with schedule, availability, performance and quality losses |
+| Six big losses | breakdowns, setup and adjustments, minor stops and reduced speed, process defects, reduced yield |
 | Roll-up | correct aggregation across machines, lines and shifts |
 
 All times must be in the same unit; `ideal_cycle_time` is that unit per piece
@@ -100,7 +116,7 @@ correct roll-up. The `OEEResult` contract is append-only from here.
 
 | Version | Scope |
 |---------|-------|
-| 0.2 | the six big losses (breakdown/setup, minor stops/speed, defects/startup) and a downtime-reason Pareto; computing OEE from an event log |
+| 0.2 | a downtime-reason Pareto over the losses; computing OEE from an event log |
 | 0.3 | plotting (the OEE waterfall, six-big-losses and trend charts) as an optional extra |
 | 0.4 | an MCP server so an agent can compute and explain OEE |
 

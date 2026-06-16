@@ -38,8 +38,17 @@ def _exactly_one(a, b, name_a: str, name_b: str):
 def oee(planned_production_time, *, run_time=None, downtime=None,
         ideal_cycle_time=None, ideal_rate=None, total_count,
         good_count=None, reject_count=None, all_time=None,
+        setup_time=None, startup_rejects=None,
         target_oee: float = 0.85, name: str | None = None) -> OEEResult:
-    """Compute OEE and the time/loss waterfall from times and piece counts."""
+    """Compute OEE and the time/loss waterfall from times and piece counts.
+
+    Optional ``setup_time`` splits the availability loss into setup-and-
+    adjustments and breakdowns; optional ``startup_rejects`` (a count) splits the
+    quality loss into reduced yield and process defects. Together with the
+    performance loss these give the six big losses (the two performance losses,
+    minor stops and reduced speed, are reported combined; splitting them needs
+    event-level data).
+    """
     planned = _finite(planned_production_time, "planned_production_time")
     if planned <= 0:
         raise ValueError("planned_production_time must be positive")
@@ -109,6 +118,31 @@ def oee(planned_production_time, *, run_time=None, downtime=None,
             "oee", f"OEE {oee_value * 100:.1f}% is below the target "
             f"{target_oee * 100:.0f}%", "info"))
 
+    availability_loss = planned - run
+    performance_loss = run - net_run
+    quality_loss = net_run - fully_productive
+    if setup_time is not None:
+        setup = _finite(setup_time, "setup_time")
+        if not -1e-9 <= setup <= availability_loss + 1e-9:
+            raise ValueError("setup_time must be between 0 and the downtime")
+        setup = min(max(setup, 0.0), availability_loss)
+    else:
+        setup = 0.0
+    if startup_rejects is not None:
+        su = _finite(startup_rejects, "startup_rejects")
+        if not -1e-9 <= su <= reject + 1e-9:
+            raise ValueError("startup_rejects must be between 0 and reject_count")
+        reduced_yield = quality_loss * (su / reject) if reject > 0 else 0.0
+    else:
+        reduced_yield = 0.0
+    six_losses = {
+        "breakdowns": availability_loss - setup,
+        "setup_and_adjustments": setup,
+        "minor_stops_and_reduced_speed": performance_loss,
+        "process_defects": quality_loss - reduced_yield,
+        "reduced_yield": reduced_yield,
+    }
+
     meta = {
         "computed_at": utcnow(),
         "version": __version__,
@@ -124,8 +158,9 @@ def oee(planned_production_time, *, run_time=None, downtime=None,
         utilization=utilization, teep=teep,
         planned_production_time=planned, run_time=run, net_run_time=net_run,
         fully_productive_time=fully_productive, all_time=all_time,
-        schedule_loss=schedule_loss, availability_loss=planned - run,
-        performance_loss=run - net_run, quality_loss=net_run - fully_productive,
+        schedule_loss=schedule_loss, availability_loss=availability_loss,
+        performance_loss=performance_loss, quality_loss=quality_loss,
+        six_losses=six_losses,
         total_count=total, good_count=good, reject_count=reject,
         target_oee=target_oee, alerts=tuple(alerts), meta=meta,
     )
@@ -160,6 +195,7 @@ def oee_from_factors(availability, performance, quality, *,
         planned_production_time=None, run_time=None, net_run_time=None,
         fully_productive_time=None, all_time=None, schedule_loss=None,
         availability_loss=None, performance_loss=None, quality_loss=None,
+        six_losses=None,
         total_count=None, good_count=None, reject_count=None,
         target_oee=target_oee, alerts=tuple(alerts), meta=meta,
     )

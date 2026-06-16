@@ -49,6 +49,13 @@ def aggregate(parts, *, target_oee: float = 0.85,
     else:
         s_all = utilization = teep = schedule_loss = None
 
+    loss_keys = ("breakdowns", "setup_and_adjustments",
+                 "minor_stops_and_reduced_speed", "process_defects", "reduced_yield")
+    if all(p.six_losses is not None for p in parts):
+        six_losses = {k: sum(p.six_losses[k] for p in parts) for k in loss_keys}
+    else:
+        six_losses = None
+
     alerts: list[Alert] = []
     if oee_value < target_oee:
         alerts.append(Alert(
@@ -69,7 +76,8 @@ def aggregate(parts, *, target_oee: float = 0.85,
         planned_production_time=s_planned, run_time=s_run, net_run_time=s_net,
         fully_productive_time=s_fp, all_time=s_all, schedule_loss=schedule_loss,
         availability_loss=s_planned - s_run, performance_loss=s_run - s_net,
-        quality_loss=s_net - s_fp, total_count=s_total, good_count=s_good,
+        quality_loss=s_net - s_fp, six_losses=six_losses,
+        total_count=s_total, good_count=s_good,
         reject_count=s_total - s_good, target_oee=target_oee,
         alerts=tuple(alerts), meta=meta,
     )

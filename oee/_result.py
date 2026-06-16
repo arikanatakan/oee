@@ -60,6 +60,7 @@ class OEEResult:
     availability_loss: float | None
     performance_loss: float | None
     quality_loss: float | None
+    six_losses: dict | None
     total_count: float | None
     good_count: float | None
     reject_count: float | None
@@ -99,6 +100,10 @@ class OEEResult:
         ]
         if self.teep is not None:
             lines.append(f"  TEEP           {_pct(self.teep):>5}%")
+        if self.six_losses and self.planned_production_time:
+            name, value = max(self.six_losses.items(), key=lambda kv: kv[1])
+            share = _pct(value / self.planned_production_time)
+            lines.append(f"  Biggest loss   {name} ({share}% of planned time)")
         for alert in self.alerts:
             lines.append("  " + str(alert))
         lines.append(f"Verdict: OEE {_pct(self.oee)}% - {self._verdict()}")
@@ -130,6 +135,7 @@ class OEEResult:
                 "performance_loss": self.performance_loss,
                 "quality_loss": self.quality_loss,
             },
+            "six_losses": self.six_losses,
             "counts": {
                 "total_count": self.total_count,
                 "good_count": self.good_count,
