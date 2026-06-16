@@ -25,8 +25,9 @@ from ._result import Alert, OEEResult
 from ._version import __version__
 from .aggregate import aggregate
 from .core import oee, oee_from_factors
+from .pareto import ParetoEntry, pareto
 
 __all__ = [
-    "oee", "oee_from_factors", "aggregate",
-    "OEEResult", "Alert", "__version__",
+    "oee", "oee_from_factors", "aggregate", "pareto",
+    "OEEResult", "Alert", "ParetoEntry", "__version__",
 ]

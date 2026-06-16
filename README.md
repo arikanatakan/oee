@@ -83,6 +83,18 @@ r.six_losses
 #  'process_defects': 30.0, 'reduced_yield': 20.0}
 ```
 
+Rank the losses (or any downtime-reason breakdown) with a Pareto:
+
+```python
+for e in oee.pareto(r.six_losses):
+    print(f"{e.label:30} {e.value:5.0f}  {e.share:5.0%}  cum {e.cumulative:5.0%}")
+# breakdowns                        50    28%  cum   28%
+# minor_stops_and_reduced_speed     50    28%  cum   56%
+# process_defects                   30    17%  cum   72%
+# setup_and_adjustments             30    17%  cum   89%
+# reduced_yield                     20    11%  cum  100%
+```
+
 When you already have the three factors:
 
 ```python
@@ -101,6 +113,7 @@ provenance (version, input hash, timestamp).
 | Extended | TEEP, utilization (when total calendar time is given) |
 | Waterfall | planned -> run -> net run -> fully productive time, with schedule, availability, performance and quality losses |
 | Six big losses | breakdowns, setup and adjustments, minor stops and reduced speed, process defects, reduced yield |
+| Pareto | rank any loss breakdown by share and cumulative share |
 | Roll-up | correct aggregation across machines, lines and shifts |
 
 All times must be in the same unit; `ideal_cycle_time` is that unit per piece
@@ -116,7 +129,7 @@ correct roll-up. The `OEEResult` contract is append-only from here.
 
 | Version | Scope |
 |---------|-------|
-| 0.2 | a downtime-reason Pareto over the losses; computing OEE from an event log |
+| 0.2 | computing OEE from an event log (production runs, downtime events with reasons, reject records) |
 | 0.3 | plotting (the OEE waterfall, six-big-losses and trend charts) as an optional extra |
 | 0.4 | an MCP server so an agent can compute and explain OEE |
 

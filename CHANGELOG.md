@@ -14,6 +14,9 @@ All notable changes to this project are documented here. The format follows
   defects and reduced yield. Optional `setup_time` and `startup_rejects`
   arguments drive the availability and quality splits, `aggregate()` sums the
   six losses across machines, and `summary()` names the biggest loss.
+- `pareto()` - rank any named breakdown (downtime reasons, the six losses,
+  reject reasons) largest first, with each one's share and the running
+  cumulative share, so the vital few losses to target stand out.
 
 ## [0.1.0] - 2026-06-16
 
