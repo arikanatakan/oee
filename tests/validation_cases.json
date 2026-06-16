@@ -24,6 +24,26 @@
       "tol": 0.001
     },
     {
+      "id": "teeptrak-cnc-shift",
+      "description": "A CNC machining shift (all times in seconds). Planned production time 26100 s (435 min), 3690 s (61.5 min) of stoppages, ideal cycle 60 s/piece, 312 pieces of which 298 are first-time-right (9 rework + 5 scrap = 14 not good). Published A 85.86%, P 83.54%, Q 95.51%, OEE 68.52%.",
+      "source": "TeepTrak, 'How to Calculate OEE: Formula + Worked Example'.",
+      "method": "time_and_counts",
+      "inputs": {
+        "planned_production_time": 26100,
+        "downtime": 3690,
+        "ideal_cycle_time": 60,
+        "total_count": 312,
+        "reject_count": 14
+      },
+      "expected": {
+        "availability": 0.8586,
+        "performance": 0.8354,
+        "quality": 0.9551,
+        "oee": 0.6852
+      },
+      "tol": 0.001
+    },
+    {
       "id": "hand-round-numbers",
       "description": "Hand-derived: 480 min planned, 80 min down (run 400), ideal cycle 0.5 min/piece, 700 pieces all good. A = 400/480, P = (0.5*700)/400, Q = 1, OEE = (700*0.5)/480.",
       "source": "Hand-derived from the OEE definition.",
@@ -46,7 +66,7 @@
     {
       "id": "factors-world-class",
       "description": "World-class benchmark factors (availability 90%, performance 95%, quality 99.9%), giving OEE just above the 85% world-class level.",
-      "source": "World-class OEE benchmark (Nakajima).",
+      "source": "Nakajima, S. (1988), Introduction to TPM, Productivity Press (world-class benchmark: A>=90%, P>=95%, Q>=99.9%, OEE>=85%).",
       "method": "factors",
       "inputs": {"availability": 0.90, "performance": 0.95, "quality": 0.999},
       "expected": {

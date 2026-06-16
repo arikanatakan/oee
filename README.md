@@ -161,6 +161,30 @@ correct roll-up. The `OEEResult` contract is append-only from here.
 Out of scope: data collection / machine connectivity (that is the job of an
 MES or an IoT dashboard); `oee` is the calculation layer they can build on.
 
+## References
+
+### Definitions
+
+OEE follows the standard definitions: Availability x Performance x Quality, the
+time waterfall, the six big losses, TEEP and the world-class benchmark.
+
+- Nakajima, S. (1988). *Introduction to TPM*. Productivity Press. The origin of
+  OEE and the world-class benchmark (availability >= 90%, performance >= 95%,
+  quality >= 99.9%, OEE >= 85%).
+- SEMI E79. The semiconductor industry standard for equipment efficiency and OEE.
+- Vorne Industries, *The Fast Guide to OEE* ([oee.com](https://www.oee.com/calculating-oee/)).
+
+### Worked examples
+
+The validation suite checks the computation against published worked examples,
+each cited in its case:
+
+| Example | OEE | Source |
+|---------|-----|--------|
+| Packaging line | 74.79% | Vorne, *The Fast Guide to OEE* ([oee.com](https://www.oee.com/calculating-oee/)) |
+| CNC machining shift | 68.52% | [TeepTrak, *How to Calculate OEE*](https://teeptrak.com/en/how-to-calculate-oee-formula-worked-example/) |
+| World-class benchmark | 85.4% | Nakajima (1988), *Introduction to TPM* |
+
 ## License
 
 MIT. Written and maintained by [Atakan Arikan](https://github.com/arikanatakan),

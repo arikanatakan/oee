@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project uses
 [semantic versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- A References section and an extra published worked example in the validation
+  suite (TeepTrak's CNC machining shift, OEE 68.52%), alongside the Vorne
+  example and the Nakajima world-class benchmark.
+
 ## [0.1.2] - 2026-06-16
 
 ### Added
