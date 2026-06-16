@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "oee"
-version = "0.1.2"
+version = "0.2.0"
 description = "Overall Equipment Effectiveness for Python: availability, performance and quality with the full time waterfall, TEEP, and correct multi-machine roll-up. Computed from the standard definitions and validated against published examples."
 readme = "README.md"
 license = { text = "MIT" }
