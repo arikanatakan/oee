@@ -11,6 +11,8 @@ counts, get the full time waterfall and the three loss categories, TEEP and
 utilization, and roll figures up correctly across machines and shifts. Computed
 from the standard definitions and validated against published worked examples.
 
+![oee framework: inputs (times and counts, or an event log) flow through the OEE engine (availability, performance, quality, the time waterfall and six big losses) into an OEEResult with provenance, consumed by aggregate(), pareto() and charts](assets/framework.png)
+
 ## Motivation
 
 OEE is the standard manufacturing efficiency metric, but Python has no library
