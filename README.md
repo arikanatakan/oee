@@ -1,7 +1,7 @@
 # oee
 
 [![CI](https://github.com/arikanatakan/oee/actions/workflows/ci.yml/badge.svg)](https://github.com/arikanatakan/oee/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/oee)](https://pypi.org/project/oee/)
+[![PyPI](https://img.shields.io/pypi/v/oee?v=2)](https://pypi.org/project/oee/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Overall Equipment Effectiveness for Python.
