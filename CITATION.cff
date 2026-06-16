@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use oee in your work, please cite it as below."
-title: oee
+title: "oee: Overall Equipment Effectiveness for Python"
 abstract: >-
   Overall Equipment Effectiveness for Python: availability, performance and
   quality with the full time waterfall, TEEP, and correct multi-machine
@@ -10,7 +10,7 @@ type: software
 authors:
   - family-names: Arikan
     given-names: Atakan
-version: 0.1.0
+version: 0.2.0
 date-released: 2026-06-16
 license: MIT
 repository-code: "https://github.com/arikanatakan/oee"
