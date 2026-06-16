@@ -26,8 +26,10 @@ from ._version import __version__
 from .aggregate import aggregate
 from .core import from_log, oee, oee_from_factors
 from .pareto import ParetoEntry, pareto
+from .plot import losses_pareto, trend, waterfall
 
 __all__ = [
     "oee", "oee_from_factors", "from_log", "aggregate", "pareto",
+    "waterfall", "losses_pareto", "trend",
     "OEEResult", "Alert", "ParetoEntry", "__version__",
 ]

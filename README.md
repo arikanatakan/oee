@@ -116,6 +116,17 @@ When you already have the three factors:
 oee.oee_from_factors(0.90, 0.95, 0.999).world_class   # True (OEE >= 85%)
 ```
 
+Charts come with the optional `plot` extra (`pip install oee[plot]`):
+
+```python
+oee.waterfall(r)              # the OEE time waterfall
+oee.losses_pareto(r)          # a Pareto of the six big losses
+oee.trend(shifts, factors=True)   # OEE and the factors across a sequence
+```
+
+Each draws onto a matplotlib Axes and returns it (`ax.figure.savefig(...)` to
+save); matplotlib stays an optional extra, so the core has no dependencies.
+
 Every result carries the factors, the time waterfall, the losses, `world_class`
 and `meets_target` flags, `summary()`, and a JSON-safe `to_dict()` with
 provenance (version, input hash, timestamp).
@@ -130,6 +141,7 @@ provenance (version, input hash, timestamp).
 | Six big losses | breakdowns, setup and adjustments, minor stops and reduced speed, process defects, reduced yield |
 | Pareto | rank any loss breakdown by share and cumulative share |
 | Roll-up | correct aggregation across machines, lines and shifts |
+| Charts | waterfall, six-big-losses Pareto and trend (optional `plot` extra) |
 
 All times must be in the same unit; `ideal_cycle_time` is that unit per piece
 (or pass `ideal_rate` in pieces per that unit). Performance above 100% is capped
@@ -144,8 +156,7 @@ correct roll-up. The `OEEResult` contract is append-only from here.
 
 | Version | Scope |
 |---------|-------|
-| 0.2 | plotting (the OEE waterfall, six-big-losses Pareto and trend charts) as an optional extra |
-| 0.3 | an MCP server so an agent can compute and explain OEE |
+| 0.2 | an MCP server so an agent can compute and explain OEE |
 
 Out of scope: data collection / machine connectivity (that is the job of an
 MES or an IoT dashboard); `oee` is the calculation layer they can build on.

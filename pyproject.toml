@@ -29,7 +29,8 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7", "ruff", "build"]
+plot = ["matplotlib>=3.5"]
+dev = ["pytest>=7", "ruff", "build", "matplotlib>=3.5"]
 
 [project.urls]
 Homepage = "https://github.com/arikanatakan/oee"

@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project uses
 [semantic versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- Optional charts (install with `pip install oee[plot]`): `waterfall()` (the OEE
+  time waterfall), `losses_pareto()` (a Pareto of the six big losses or any
+  reason breakdown) and `trend()` (OEE and the factors over a sequence of
+  results). matplotlib is an optional extra, so the core stays dependency-free.
+
 ## [0.1.1] - 2026-06-16
 
 ### Added
