@@ -1,0 +1,61 @@
+{
+  "cases": [
+    {
+      "id": "vorne-fast-guide",
+      "description": "The canonical worked example from Vorne's 'Fast Guide to OEE'. An 8-hour shift (480 min) with 60 min of breaks, 47 min of down time, an ideal rate of 60 pieces/min, 19271 total pieces and 423 rejects.",
+      "source": "Vorne Industries, 'The Fast Guide to OEE'.",
+      "method": "time_and_counts",
+      "inputs": {
+        "planned_production_time": 420,
+        "downtime": 47,
+        "ideal_rate": 60,
+        "total_count": 19271,
+        "reject_count": 423,
+        "all_time": 480
+      },
+      "expected": {
+        "availability": 0.8881,
+        "performance": 0.8611,
+        "quality": 0.9780,
+        "oee": 0.7480,
+        "teep": 0.6544,
+        "utilization": 0.8750
+      },
+      "tol": 0.001
+    },
+    {
+      "id": "hand-round-numbers",
+      "description": "Hand-derived: 480 min planned, 80 min down (run 400), ideal cycle 0.5 min/piece, 700 pieces all good. A = 400/480, P = (0.5*700)/400, Q = 1, OEE = (700*0.5)/480.",
+      "source": "Hand-derived from the OEE definition.",
+      "method": "time_and_counts",
+      "inputs": {
+        "planned_production_time": 480,
+        "downtime": 80,
+        "ideal_cycle_time": 0.5,
+        "total_count": 700,
+        "reject_count": 0
+      },
+      "expected": {
+        "availability": 0.8333,
+        "performance": 0.8750,
+        "quality": 1.0,
+        "oee": 0.7292
+      },
+      "tol": 0.001
+    },
+    {
+      "id": "factors-world-class",
+      "description": "World-class benchmark factors (availability 90%, performance 95%, quality 99.9%), giving OEE just above the 85% world-class level.",
+      "source": "World-class OEE benchmark (Nakajima).",
+      "method": "factors",
+      "inputs": {"availability": 0.90, "performance": 0.95, "quality": 0.999},
+      "expected": {
+        "availability": 0.90,
+        "performance": 0.95,
+        "quality": 0.999,
+        "oee": 0.8541
+      },
+      "tol": 0.001
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oee"
+version = "0.1.0"
+description = "Overall Equipment Effectiveness for Python: availability, performance and quality with the full time waterfall, TEEP, and correct multi-machine roll-up. Computed from the standard definitions and validated against published examples."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Atakan Arikan" }]
+requires-python = ">=3.10"
+dependencies = []
+keywords = [
+    "oee", "overall-equipment-effectiveness", "manufacturing", "tpm", "teep",
+    "availability", "performance", "quality", "six-big-losses",
+    "production", "lean",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Manufacturing",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "ruff", "build"]
+
+[project.urls]
+Homepage = "https://github.com/arikanatakan/oee"
+Repository = "https://github.com/arikanatakan/oee"
+Issues = "https://github.com/arikanatakan/oee/issues"
+
+[tool.setuptools.packages.find]
+include = ["oee*"]
+
+[tool.setuptools.package-data]
+oee = ["py.typed"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

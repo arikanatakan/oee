@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use oee in your work, please cite it as below."
+title: oee
+abstract: >-
+  Overall Equipment Effectiveness for Python: availability, performance and
+  quality with the full time waterfall, TEEP, and correct multi-machine
+  roll-up, computed from the standard definitions and validated against
+  published worked examples.
+type: software
+authors:
+  - family-names: Arikan
+    given-names: Atakan
+version: 0.1.0
+date-released: 2026-06-16
+license: MIT
+repository-code: "https://github.com/arikanatakan/oee"
+url: "https://github.com/arikanatakan/oee"
+keywords:
+  - oee
+  - overall-equipment-effectiveness
+  - manufacturing
+  - teep
+  - tpm
+  - production
