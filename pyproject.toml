@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,7 +7,8 @@ name = "oee"
 version = "0.2.0"
 description = "Overall Equipment Effectiveness for Python: availability, performance and quality with the full time waterfall, TEEP, and correct multi-machine roll-up. Computed from the standard definitions and validated against published examples."
 readme = "README.md"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "Atakan Arikan" }]
 requires-python = ">=3.10"
 dependencies = []
@@ -20,22 +21,23 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Manufacturing",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering",
 ]
 
 [project.optional-dependencies]
 plot = ["matplotlib>=3.5"]
-dev = ["pytest>=7", "ruff", "build", "matplotlib>=3.5"]
+dev = ["pytest>=7", "ruff", "mypy", "build", "matplotlib>=3.5"]
 
 [project.urls]
 Homepage = "https://github.com/arikanatakan/oee"
 Repository = "https://github.com/arikanatakan/oee"
 Issues = "https://github.com/arikanatakan/oee/issues"
+"MCP server" = "https://github.com/arikanatakan/oee-mcp"
 
 [tool.setuptools.packages.find]
 include = ["oee*"]
@@ -45,6 +47,9 @@ oee = ["py.typed"]
 
 [tool.ruff]
 line-length = 88
+
+[tool.mypy]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

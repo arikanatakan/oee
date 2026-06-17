@@ -35,7 +35,7 @@ class CapacityResult:
             f"  takt time      {round(self.takt_time, 4)} per unit",
             f"  required rate  {round(self.required_rate, 4)} units per time",
         ]
-        if self.max_output is not None:
+        if self.max_output is not None and self.utilization_needed is not None:
             lines.append(f"  max output     {round(self.max_output, 1)} units")
             lines.append(f"  meets demand   {self.meets_demand}")
             lines.append(

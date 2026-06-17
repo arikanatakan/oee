@@ -61,6 +61,9 @@ def loss_value(result: OEEResult, *, value_per_unit=None,
             "loss_value needs a result from oee() or from_log() with counts")
     if result.net_run_time <= 0:
         raise ValueError("cannot value losses when there is no net run time")
+    assert (result.availability_loss is not None
+            and result.performance_loss is not None
+            and result.quality_loss is not None)  # set with net_run_time
 
     ideal_cycle = result.net_run_time / result.total_count
     avail = result.availability_loss / ideal_cycle

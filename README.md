@@ -194,17 +194,18 @@ oee.loss_value(r, value_per_unit=12.0)                 # losses as units and mon
 
 ## Status
 
-Version 0.1.0. Single-machine OEE, the time waterfall, TEEP/utilization, and
-correct roll-up. The `OEEResult` contract is append-only from here.
-
-## Roadmap
-
-| Version | Scope |
-|---------|-------|
-| 0.2 | an MCP server so an agent can compute and explain OEE |
+Version 0.2.0. Single-machine OEE, the time waterfall, TEEP/utilization and OOE,
+correct roll-up across machines and shifts, and the surrounding metrics
+(reliability, yield, capacity and loss valuation). The `OEEResult` contract is
+append-only from here.
 
 Out of scope: data collection / machine connectivity (that is the job of an
 MES or an IoT dashboard); `oee` is the calculation layer they can build on.
+
+## Related
+
+[oee-mcp](https://github.com/arikanatakan/oee-mcp) exposes these calculations
+and charts to AI agents over the Model Context Protocol.
 
 ## References
 

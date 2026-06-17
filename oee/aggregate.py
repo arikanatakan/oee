@@ -63,11 +63,13 @@ def aggregate(parts, *, target_oee: float = 0.85,
     else:
         six_losses = None
 
+    downtime_reasons: dict | None
     if all(p.downtime_reasons is not None for p in parts):
-        downtime_reasons: dict | None = {}
+        reasons: dict = {}
         for part in parts:
-            for reason, value in part.downtime_reasons.items():
-                downtime_reasons[reason] = downtime_reasons.get(reason, 0.0) + value
+            for reason, value in (part.downtime_reasons or {}).items():
+                reasons[reason] = reasons.get(reason, 0.0) + value
+        downtime_reasons = reasons
     else:
         downtime_reasons = None
 
