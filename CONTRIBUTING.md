@@ -14,10 +14,11 @@ python -m pip install -e ".[dev]"
 
 ```
 ruff check .
+mypy oee
 pytest
 ```
 
-Both must pass. New metrics should come with a validation case in
+All three must pass. New metrics should come with a validation case in
 `tests/validation_cases.json`: the inputs and the expected factors, taken from a
 published worked example (cite the source) or derived by hand and documented in
 the case.
