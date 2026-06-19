@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and the project uses
 [semantic versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- Example `examples/bottling_line.py`: a comprehensive, end-to-end run of the
+  whole toolkit on one shift of a beverage bottling line - the OEE factors and
+  time waterfall, the effectiveness family (OEE/OOE/TEEP), the six big losses
+  and their Pareto, the same shift from an event log, reliability (MTBF/MTTR),
+  a correct multi-machine roll-up versus the misleading average, rolled
+  throughput yield, capacity against demand, and loss valuation. The filler
+  reproduces the canonical Vorne figure (OEE 74.79%); the rest is illustrative.
+
 ## [0.2.0] - 2026-06-16
 
 ### Added
