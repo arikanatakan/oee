@@ -15,6 +15,9 @@ All notable changes to this project are documented here. The format follows
   a correct multi-machine roll-up versus the misleading average, rolled
   throughput yield, capacity against demand, and loss valuation. The filler
   reproduces the canonical Vorne figure (OEE 74.79%); the rest is illustrative.
+- README "Worked example" section showing that example's console output and a
+  side-by-side chart panel (waterfall, loss Pareto, OEE by machine), rendered by
+  `assets/example_bottling.py`.
 
 ## [0.2.0] - 2026-06-16
 

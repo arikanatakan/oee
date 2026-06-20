@@ -133,6 +133,40 @@ Every result carries the factors, the time waterfall, the losses, `world_class`
 and `meets_target` flags, `summary()`, and a JSON-safe `to_dict()` with
 provenance (version, input hash, timestamp).
 
+## Worked example
+
+[`examples/bottling_line.py`](examples/bottling_line.py) runs the whole toolkit
+on one shift of a beverage bottling line: the OEE factors and time waterfall,
+the effectiveness family (OEE/OOE/TEEP), the six big losses and their Pareto,
+the same shift from an event log, reliability, a correct multi-machine roll-up,
+rolled throughput yield, capacity, and loss valuation. The filler reproduces the
+canonical Vorne figure (OEE 74.79%); the rest is illustrative of a real line.
+
+![Bottling-line example output: the OEE time waterfall, the six-big-losses Pareto, and OEE by machine with the line roll-up, side by side](assets/example_bottling.png)
+
+```text
+$ python examples/bottling_line.py
+== 1. Filler OEE, the time waterfall and the effectiveness family ==
+  availability 0.888  x  performance 0.861  x  quality 0.978  =  OEE 0.748
+  OEE 74.8%  >=  OOE 69.8%  >=  TEEP 65.4%
+...
+== 4. Reliability of the filler (the availability driver) ==
+  3 breakdowns over 373 min up: MTBF 124.3 min, MTTR 9.0 min, inherent availability 93.2%
+
+== 5. Roll up the line, correctly (not by averaging the OEEs) ==
+  filler         planned  420 min   OEE 0.748
+  labeler        planned  240 min   OEE 0.829
+  case packer    planned  480 min   OEE 0.739
+  line OEE 0.761  (time-weighted)   vs the misleading simple average 0.772
+
+== 6. Rolled throughput yield across the three stations (quality) ==
+  rolled throughput yield 95.874%  (lower than any one station)
+...
+== 8. The money behind the filler's losses ==
+  lost good bottles this shift: availability 2820, performance 3109, quality 423  -> total 6352
+  at $0.50/bottle that is $3,176 of lost contribution in one shift
+```
+
 ## What it computes
 
 | Group | Output |
