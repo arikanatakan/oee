@@ -18,6 +18,12 @@ All notable changes to this project are documented here. The format follows
 - README "Worked example" section showing that example's console output and a
   side-by-side chart panel (waterfall, loss Pareto, OEE by machine), rendered by
   `assets/example_bottling.py`.
+- Example `examples/vegetable_oil_oee.py`: a real-world case using the published
+  OEE factors of a vegetable-oil plant (Tonny et al. 2023, Management Science
+  Letters 13(2)) and the study's optimised targets. Measured OEE 37.6% (near
+  world-class quality, but availability and performance hold it down); the
+  paper's targets project 64.3%. Illustrates a real plant far below the textbook
+  benchmark, with every number cited.
 
 ## [0.2.0] - 2026-06-16
 
