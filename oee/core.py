@@ -225,6 +225,8 @@ def from_log(planned_production_time, *, runs, downtime_events=None,
     ``duration``, a ``reason``, and an optional ``planned`` flag (planned stops
     become setup and adjustments, the rest breakdowns). The result carries
     ``downtime_reasons`` for a Pareto, plus the usual waterfall and six losses.
+    With different ideal rates, quality is weighted by ideal production time,
+    as in ``aggregate()``; good and total counts remain the actual piece counts.
     """
     if isinstance(runs, Mapping):
         runs = [runs]
@@ -232,7 +234,7 @@ def from_log(planned_production_time, *, runs, downtime_events=None,
     if not runs:
         raise ValueError("from_log needs at least one production run")
 
-    total = good = ideal_net_run = 0.0
+    total = good = ideal_net_run = ideal_good = 0.0
     for i, run in enumerate(runs):
         count = _finite(run["count"], f"runs[{i}].count")
         if count < 0:
@@ -258,6 +260,7 @@ def from_log(planned_production_time, *, runs, downtime_events=None,
         total += count
         good += g
         ideal_net_run += count * cycle
+        ideal_good += g * cycle
     if total <= 0:
         raise ValueError("the production runs have no pieces")
     effective_cycle = ideal_net_run / total
@@ -281,14 +284,37 @@ def from_log(planned_production_time, *, runs, downtime_events=None,
         all_time=all_time, setup_time=setup if downtime_events else None,
         startup_rejects=startup_rejects, target_oee=target_oee, name=name,
     )
+    # Piece-weighted quality would assign every good piece the average cycle
+    # time, which is incorrect when run rates and reject proportions differ.
+    quality = ideal_good / ideal_net_run
+    net_run = result.net_run_time or 0.0
+    fully_productive = quality * net_run
+    oee_value = result.availability * result.performance * quality
+    quality_loss = net_run - fully_productive
+    reduced_yield = (quality_loss * startup_rejects / (total - good)
+                     if startup_rejects is not None and total > good else 0.0)
+    six_losses = dict(result.six_losses or {})
+    six_losses.update(process_defects=quality_loss - reduced_yield,
+                      reduced_yield=reduced_yield)
+    teep = (fully_productive / result.all_time
+            if result.all_time is not None else None)
+    alerts = [a for a in result.alerts if a.indicator != "oee"]
+    if oee_value < target_oee:
+        alerts.append(Alert(
+            "oee", f"OEE {oee_value * 100:.1f}% is below the target "
+            f"{target_oee * 100:.0f}%", "info"))
     meta = {
         **result.meta,
         "method": "event_log",
         "input_hash": data_hash({
             "planned": float(planned_production_time), "total": total,
-            "good": good, "net_run": ideal_net_run,
+            "good": good, "net_run": ideal_net_run, "ideal_good": ideal_good,
             "downtime_reasons": downtime_reasons,
         }),
     }
-    return replace(result, downtime_reasons=downtime_reasons, meta=meta)
+    return replace(result, quality=quality, oee=oee_value,
+                   fully_productive_time=fully_productive,
+                   quality_loss=quality_loss, six_losses=six_losses,
+                   teep=teep, alerts=tuple(alerts),
+                   downtime_reasons=downtime_reasons, meta=meta)
 

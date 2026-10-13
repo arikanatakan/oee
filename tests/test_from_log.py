@@ -50,7 +50,74 @@ def test_multiple_runs_with_different_rates():
     )
     assert r.total_count == 300
     assert r.good_count == 290
-    assert 0 < r.oee < 1
+    # Good production takes 100 / 10 + 190 * 0.05 = 19.5 ideal minutes.
+    assert r.net_run_time == pytest.approx(20)
+    assert r.fully_productive_time == pytest.approx(19.5)
+    assert r.quality == pytest.approx(19.5 / 20)
+    assert r.oee == pytest.approx(19.5 / 100)
+
+
+def test_mixed_rate_log_matches_aggregate():
+    runs = [{"count": 100, "good": 100, "ideal_rate": 10},
+            {"count": 200, "good": 190, "ideal_rate": 20}]
+    r = oee.from_log(100, runs=runs, all_time=120, startup_rejects=5,
+                     downtime_events=[{"reason": "jam", "duration": 10}])
+    parts = [oee.oee(50, run_time=45, ideal_rate=run["ideal_rate"],
+                      total_count=run["count"], good_count=run["good"],
+                      all_time=60) for run in runs]
+    agg = oee.aggregate(parts)
+    assert r.quality == pytest.approx(agg.quality)
+    assert r.oee == pytest.approx(agg.oee)
+    assert r.teep == pytest.approx(agg.teep)
+    assert r.quality_loss == pytest.approx(0.5)
+    assert r.six_losses["process_defects"] == pytest.approx(0.25)
+    assert r.six_losses["reduced_yield"] == pytest.approx(0.25)
+    assert sum(r.six_losses.values()) + r.fully_productive_time \
+        == pytest.approx(r.planned_production_time)
+
+
+@pytest.mark.parametrize("target,below", [(0.194, False), (0.196, True)])
+def test_mixed_rate_quality_updates_target_alert(target, below):
+    r = oee.from_log(
+        100, target_oee=target,
+        runs=[{"count": 100, "good": 100, "ideal_rate": 10},
+              {"count": 200, "good": 190, "ideal_rate": 20}],
+        downtime_events=[{"reason": "jam", "duration": 10}],
+    )
+    assert r.oee == pytest.approx(0.195)
+    assert any(a.indicator == "oee" for a in r.alerts) == below
+    assert r.meets_target != below
+
+
+def test_mixed_rate_quality_preserves_performance_cap():
+    r = oee.from_log(
+        10, runs=[{"count": 100, "good": 100, "ideal_rate": 10},
+                  {"count": 200, "good": 190, "ideal_rate": 20}],
+    )
+    assert r.performance_raw == pytest.approx(2)
+    assert r.performance == 1
+    assert r.quality == pytest.approx(0.975)
+    assert r.fully_productive_time == pytest.approx(9.75)
+    assert r.quality_loss == pytest.approx(0.25)
+    assert r.oee == pytest.approx(0.975)
+    assert any(a.indicator == "performance" for a in r.alerts)
+
+
+def test_mixed_rate_input_hash_tracks_good_time():
+    a = oee.from_log(
+        200, runs=[{"count": 100, "good": 90, "ideal_rate": 1},
+                   {"count": 100, "good": 100, "ideal_rate": 2}],
+    )
+    b = oee.from_log(
+        200, runs=[{"count": 100, "good": 100, "ideal_rate": 1},
+                   {"count": 100, "good": 90, "ideal_rate": 2}],
+    )
+    assert a.total_count == b.total_count
+    assert a.good_count == b.good_count
+    assert a.net_run_time == b.net_run_time
+    assert a.fully_productive_time == pytest.approx(140)
+    assert b.fully_productive_time == pytest.approx(145)
+    assert a.meta["input_hash"] != b.meta["input_hash"]
 
 
 def test_single_run_as_mapping():
